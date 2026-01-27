@@ -185,7 +185,7 @@
                         <div class="space-y-3" id="physio-services"></div>
                     </div>
                     <div>
-                        <h3 class="text-lg font-medium text-white mb-4">Advanced Treatments</h3>
+                        <h3 class="text-lg font-medium text-white mb-4">Advanced Treatments & Blood Tests</h3>
                         <div class="space-y-3" id="advanced-services"></div>
                     </div>
                 </div>
@@ -235,13 +235,13 @@
                 </div>
             </div>
 
-            <!-- Step 4: Health Screening (Z PRZYWRÓCONĄ LOGIKĄ BLOKADY) -->
+            <!-- Step 4: Health Screening -->
             <div id="step4" class="step-content hidden">
                 <h2 class="text-2xl md:text-3xl font-medium text-white mb-2 font-playfair">Health Screening</h2>
                 <p class="text-gray-400 mb-6">Answer carefully. Some conditions may prevent us from providing treatment.</p>
                 <div id="health-questions" class="space-y-4 mb-6"></div>
                 
-                <!-- Komunikat o blokadzie -->
+                <!-- Blocking Alert -->
                 <div id="health-alert" class="hidden bg-red-900/30 border border-red-500 rounded-xl p-4 mb-6">
                     <p class="text-red-400 text-sm font-medium">Based on your answers, we cannot proceed with the online booking. Please call the clinic at 01482 422122 for a medical consultation.</p>
                 </div>
@@ -306,11 +306,14 @@
                 { id: 'pregnancy', question: 'Are you currently pregnant or breastfeeding?', blocking: true },
                 { id: 'kidney', question: 'Do you have kidney disease or are you on dialysis?', blocking: true },
                 { id: 'heart', question: 'Do you have heart failure or fluid retention?', blocking: true },
-                { id: 'allergies', question: 'Do you have any allergies to vitamins or medications?', blocking: false }
+                { id: 'allergies', question: 'Do you have any allergies to vitamins or medications?', blocking: false },
+                { id: 'meds', question: 'Are you currently taking any blood thinners?', blocking: false }
             ],
             physio: [
                 { id: 'blood-clots', question: 'Have you been diagnosed with DVT or blood clots?', blocking: true },
-                { id: 'recent-surgery', question: 'Have you had surgery in the last 6 weeks?', blocking: false }
+                { id: 'recent-surgery', question: 'Have you had surgery in the last 6 weeks?', blocking: false },
+                { id: 'skin-issue', question: 'Do you have any skin infections or open wounds?', blocking: true },
+                { id: 'medical-others', question: 'Any other medical conditions we should know about?', blocking: false }
             ]
         };
 
@@ -324,7 +327,8 @@
             renderServices();
             setMinDate();
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('service')) toggleService(urlParams.get('service'));
+            const svcId = urlParams.get('service');
+            if (svcId) toggleService(svcId);
         });
 
         function renderServices() {
@@ -347,6 +351,7 @@
         function toggleService(id) {
             const all = [...services.iv, ...services.physio, ...services.advanced];
             const s = all.find(item => item.id === id);
+            if (!s) return;
             const idx = selectedServices.findIndex(item => item.id === id);
             if (idx > -1) selectedServices.splice(idx, 1);
             else selectedServices.push(s);
@@ -362,13 +367,16 @@
                 document.getElementById(`ck-${s.id}`).classList.toggle('hidden', !isSel);
             });
             const total = selectedServices.reduce((sum, s) => sum + s.price, 0);
+            const duration = selectedServices.reduce((sum, s) => sum + s.duration, 0);
             document.getElementById('continue-btn').disabled = selectedServices.length === 0;
             document.getElementById('continue-count').textContent = selectedServices.length;
             const sBox = document.getElementById('selection-box');
             if (selectedServices.length > 0) {
                 sBox.classList.remove('hidden');
-                document.getElementById('selection-total').textContent = `£${total} total`;
-                document.getElementById('selection-tags').innerHTML = selectedServices.map(s => `<span class="bg-gold/20 text-gold text-xs px-2 py-1 rounded-full">${s.name}</span>`).join('');
+                document.getElementById('selection-total').textContent = `£${total} total • ${duration} min`;
+                document.getElementById('selection-tags').innerHTML = selectedServices.map(s => `
+                    <span class="bg-gold/20 text-gold text-xs px-2 py-1 rounded-full flex items-center gap-1">${s.name} <button onclick="event.stopPropagation(); toggleService('${s.id}')">×</button></span>
+                `).join('');
             } else sBox.classList.add('hidden');
         }
 
@@ -380,7 +388,7 @@
         }
 
         function generateSlots() {
-            const slots = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00"];
+            const slots = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
             document.getElementById('time-slots').innerHTML = slots.map(t => `
                 <button class="time-slot p-2 rounded-lg text-xs font-medium" onclick="selectTime('${t}')" id="slot-${t.replace(':','')}">${t}</button>
             `).join('');
@@ -395,6 +403,24 @@
         function goToStep(s) {
             document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`step${s}`).classList.remove('hidden');
+            
+            // Sync indicators
+            for (let i = 1; i <= 5; i++) {
+                const indicator = document.getElementById(`step${i}-indicator`);
+                const label = document.getElementById(`step${i}-label`);
+                const connector = document.getElementById(`connector${i-1}`);
+                if (i < s) {
+                    indicator.className = 'step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-forest text-white';
+                    indicator.innerHTML = '✓';
+                } else if (i === s) {
+                    indicator.className = 'step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-gold text-dark font-bold';
+                    indicator.textContent = i;
+                } else {
+                    indicator.className = 'step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white/10 text-gray-500';
+                    indicator.textContent = i;
+                }
+            }
+
             if (s === 4) renderHealth();
             if (s === 5) renderSummary();
         }
@@ -407,9 +433,9 @@
             if (hasPhysio) q = [...q, ...healthQuestions.physio];
             
             document.getElementById('health-questions').innerHTML = q.map(item => `
-                <div class="bg-white/[0.02] border border-white/10 rounded-xl p-4 flex justify-between items-center">
+                <div class="bg-white/[0.02] border border-white/10 rounded-xl p-4 flex justify-between items-center gap-4">
                     <p class="text-sm text-white">${item.question}</p>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 flex-shrink-0">
                         <button onclick="answerHealth('${item.id}', true)" class="px-3 py-1 rounded-lg text-xs border border-white/10" id="h-${item.id}-y">Yes</button>
                         <button onclick="answerHealth('${item.id}', false)" class="px-3 py-1 rounded-lg text-xs border border-white/10" id="h-${item.id}-n">No</button>
                     </div>
@@ -420,35 +446,26 @@
 
         function answerHealth(id, val) {
             healthAnswers[id] = val;
-            document.getElementById(`h-${id}-y`).className = val ? 'px-3 py-1 rounded-lg text-xs bg-gold text-dark font-bold' : 'px-3 py-1 rounded-lg text-xs border border-white/10';
-            document.getElementById(`h-${id}-n`).className = !val ? 'px-3 py-1 rounded-lg text-xs bg-forest text-white font-bold' : 'px-3 py-1 rounded-lg text-xs border border-white/10';
+            const yBtn = document.getElementById(`h-${id}-y`);
+            const nBtn = document.getElementById(`h-${id}-n`);
+            yBtn.className = val ? 'px-3 py-1 rounded-lg text-xs bg-gold text-dark font-bold' : 'px-3 py-1 rounded-lg text-xs border border-white/10';
+            nBtn.className = !val ? 'px-3 py-1 rounded-lg text-xs bg-forest text-white font-bold' : 'px-3 py-1 rounded-lg text-xs border border-white/10';
             
-            // Re-render check to update UI block
-            const currentQuestions = getCurrentQuestions();
-            checkHealthStatus(currentQuestions);
-        }
-
-        function getCurrentQuestions() {
             const hasIV = selectedServices.some(s => s.category === 'IV Therapy' || s.category === 'Vitamin Shots');
             const hasPhysio = selectedServices.some(s => s.category === 'Physiotherapy');
-            let q = []; 
-            if (hasIV) q = [...q, ...healthQuestions.iv];
-            if (hasPhysio) q = [...q, ...healthQuestions.physio];
-            return q;
+            let q = []; if (hasIV) q = [...q, ...healthQuestions.iv]; if (hasPhysio) q = [...q, ...healthQuestions.physio];
+            checkHealthStatus(q);
         }
 
         function checkHealthStatus(questions) {
             let isBlocked = false;
             let allAnswered = true;
-
             questions.forEach(q => {
                 if (healthAnswers[q.id] === undefined) allAnswered = false;
                 if (q.blocking && healthAnswers[q.id] === true) isBlocked = true;
             });
-
             const continueBtn = document.getElementById('step4-continue');
             const alertBox = document.getElementById('health-alert');
-
             if (isBlocked) {
                 continueBtn.disabled = true;
                 alertBox.classList.remove('hidden');
@@ -460,11 +477,14 @@
 
         function renderSummary() {
             const total = selectedServices.reduce((sum, s) => sum + s.price, 0);
+            const duration = selectedServices.reduce((sum, s) => sum + s.duration, 0);
             document.getElementById('booking-summary').innerHTML = `
-                <div class="flex justify-between"><span>Treatments:</span><span class="text-white">${selectedServices.map(s => s.name).join(', ')}</span></div>
+                <div class="flex justify-between"><span>Treatments:</span><span class="text-white text-right">${selectedServices.map(s => s.name).join(', ')}</span></div>
                 <div class="flex justify-between"><span>Time:</span><span class="text-white">${selectedDate} @ ${selectedTime}</span></div>
+                <div class="flex justify-between"><span>Duration:</span><span class="text-white">${duration} min</span></div>
+                <div class="flex justify-between"><span>Customer:</span><span class="text-white">${document.getElementById('customer-name').value}</span></div>
                 <hr class="border-white/10">
-                <div class="flex justify-between font-bold"><span>Total:</span><span class="text-gold">£${total.toFixed(2)}</span></div>
+                <div class="flex justify-between font-bold text-lg"><span>Total:</span><span class="text-gold">£${total.toFixed(2)}</span></div>
             `;
             document.getElementById('full-price').textContent = `£${total.toFixed(2)}`;
             document.getElementById('deposit-price').textContent = `£${(total * 0.3).toFixed(2)}`;
@@ -485,7 +505,7 @@
         }
 
         function processPayment() {
-            alert('Redirecting to Stripe...');
+            alert('Redirecting to secure payment checkout...');
         }
     </script>
 </body>
