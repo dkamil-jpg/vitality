@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -39,25 +40,27 @@
         h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; }
         
         .glass {
-            background: rgba(15, 17, 21, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 17, 21, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(201, 169, 110, 0.15);
         }
         
         .service-item {
             background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            transition: all 0.3s ease;
         }
         
         .service-item.selected {
             border-color: #C9A96E;
             background: rgba(201, 169, 110, 0.1);
+            box-shadow: 0 0 20px rgba(201, 169, 110, 0.1);
         }
         
         .checkbox-custom {
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 6px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -65,8 +68,9 @@
         }
         
         .checkbox-custom.checked {
-            background: #C9A96E;
+            background: linear-gradient(135deg, #C9A96E 0%, #B89A5E 100%);
             border-color: #C9A96E;
+            box-shadow: 0 0 15px rgba(201, 169, 110, 0.4);
         }
         
         .time-slot {
@@ -82,18 +86,21 @@
         
         .time-slot.selected {
             border-color: #C9A96E;
-            background: #C9A96E;
+            background: linear-gradient(135deg, #C9A96E 0%, #B89A5E 100%);
             color: #0f1115;
+            font-weight: 600;
+            box-shadow: 0 0 20px rgba(201, 169, 110, 0.3);
         }
         
         .payment-option {
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
         
         .payment-option.selected {
             border-color: #C9A96E;
             background: rgba(201, 169, 110, 0.1);
+            box-shadow: 0 0 20px rgba(201, 169, 110, 0.1);
         }
         
         .step-number { transition: all 0.3s; }
@@ -102,7 +109,23 @@
         input:focus, textarea:focus {
             outline: none;
             border-color: rgba(201, 169, 110, 0.5);
+            box-shadow: 0 0 20px rgba(201, 169, 110, 0.1);
         }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #C9A96E 0%, #E8D5B0 50%, #C9A96E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gold-glow {
+            box-shadow: 0 0 30px -5px rgba(201, 169, 110, 0.5), 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f1115; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #C9A96E 0%, #8B6914 100%); border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -110,13 +133,13 @@
     <header class="glass sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-                <a href="index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                <a href="index.html" class="flex items-center gap-2 text-gray-400 hover:text-gold transition-colors group" data-testid="back-btn">
+                    <i class="fas fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
                     <span class="hidden sm:inline">Back</span>
                 </a>
                 <a href="index.html" class="flex items-center gap-2">
-                    <img src="https://customer-assets.emergentagent.com/job_c94923ea-8994-408c-82c5-8ba06f7c7bb7/artifacts/2skstidw_logo.jpeg" alt="Just Vitality Clinic" class="h-8 w-8 rounded-lg object-cover">
-                    <span class="text-gold font-medium hidden sm:inline font-playfair">Just Vitality Clinic</span>
+                    <img src="https://customer-assets.emergentagent.com/job_c94923ea-8994-408c-82c5-8ba06f7c7bb7/artifacts/2skstidw_logo.jpeg" alt="Just Vitality Clinic" class="h-10 w-10 rounded-xl object-cover ring-2 ring-gold/30">
+                    <span class="text-gold font-medium hidden sm:inline font-playfair text-lg">Just Vitality Clinic</span>
                 </a>
                 <div class="w-20"></div>
             </div>
@@ -127,73 +150,126 @@
     <div class="max-w-4xl mx-auto px-6 py-8">
         <div class="flex items-center justify-between mb-8 overflow-x-auto pb-4">
             <div class="flex items-center flex-shrink-0">
-                <div class="step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium bg-gold text-dark" id="step1-indicator">1</div>
-                <span class="hidden md:block mt-0 ml-2 text-xs text-white">Services</span>
+                <div class="step-number w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-sm font-bold bg-gold text-dark" id="step1-indicator">1</div>
+                <span class="hidden md:block mt-0 ml-3 text-sm text-white font-medium">Services</span>
             </div>
-            <div class="w-8 sm:w-16 h-0.5 mx-1 sm:mx-2 bg-white/10 step-connector" id="connector1"></div>
+            <div class="w-8 sm:w-16 h-0.5 mx-2 bg-white/10 step-connector rounded" id="connector1"></div>
             <div class="flex items-center flex-shrink-0">
-                <div class="step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium bg-white/10 text-gray-500" id="step2-indicator">2</div>
-                <span class="hidden md:block mt-0 ml-2 text-xs text-gray-500" id="step2-label">Date & Time</span>
+                <div class="step-number w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-sm font-medium bg-white/10 text-gray-500" id="step2-indicator">2</div>
+                <span class="hidden md:block mt-0 ml-3 text-sm text-gray-500" id="step2-label">Date & Time</span>
             </div>
-            <div class="w-8 sm:w-16 h-0.5 mx-1 sm:mx-2 bg-white/10 step-connector" id="connector2"></div>
+            <div class="w-8 sm:w-16 h-0.5 mx-2 bg-white/10 step-connector rounded" id="connector2"></div>
             <div class="flex items-center flex-shrink-0">
-                <div class="step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium bg-white/10 text-gray-500" id="step3-indicator">3</div>
-                <span class="hidden md:block mt-0 ml-2 text-xs text-gray-500" id="step3-label">Details</span>
+                <div class="step-number w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-sm font-medium bg-white/10 text-gray-500" id="step3-indicator">3</div>
+                <span class="hidden md:block mt-0 ml-3 text-sm text-gray-500" id="step3-label">Details</span>
             </div>
-            <div class="w-8 sm:w-16 h-0.5 mx-1 sm:mx-2 bg-white/10 step-connector" id="connector3"></div>
+            <div class="w-8 sm:w-16 h-0.5 mx-2 bg-white/10 step-connector rounded" id="connector3"></div>
             <div class="flex items-center flex-shrink-0">
-                <div class="step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium bg-white/10 text-gray-500" id="step4-indicator">4</div>
-                <span class="hidden md:block mt-0 ml-2 text-xs text-gray-500" id="step4-label">Health</span>
+                <div class="step-number w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-sm font-medium bg-white/10 text-gray-500" id="step4-indicator">4</div>
+                <span class="hidden md:block mt-0 ml-3 text-sm text-gray-500" id="step4-label">Health</span>
             </div>
-            <div class="w-8 sm:w-16 h-0.5 mx-1 sm:mx-2 bg-white/10 step-connector" id="connector4"></div>
+            <div class="w-8 sm:w-16 h-0.5 mx-2 bg-white/10 step-connector rounded" id="connector4"></div>
             <div class="flex items-center flex-shrink-0">
-                <div class="step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium bg-white/10 text-gray-500" id="step5-indicator">5</div>
-                <span class="hidden md:block mt-0 ml-2 text-xs text-gray-500" id="step5-label">Payment</span>
+                <div class="step-number w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-sm font-medium bg-white/10 text-gray-500" id="step5-indicator">5</div>
+                <span class="hidden md:block mt-0 ml-3 text-sm text-gray-500" id="step5-label">Payment</span>
             </div>
         </div>
 
-        <div id="selected-summary" class="hidden bg-gold/10 border border-gold/20 rounded-xl p-4 mb-6">
+        <div id="selected-summary" class="hidden bg-gold/10 border border-gold/30 rounded-2xl p-5 mb-6">
             <div class="flex flex-wrap gap-2 items-center">
-                <span class="text-sm text-gold font-medium">Selected:</span>
+                <span class="text-sm text-gold font-semibold"><i class="fas fa-check-circle mr-1"></i> Selected:</span>
                 <div id="selected-pills" class="flex flex-wrap gap-2"></div>
-                <span class="ml-auto text-gold font-semibold" id="total-summary">£0 • 0 min</span>
+                <span class="ml-auto text-gold font-bold text-lg" id="total-summary">£0 • 0 min</span>
             </div>
         </div>
 
-        <div class="bg-card border border-white/10 rounded-2xl p-6 md:p-8">
+        <div class="bg-card border border-white/10 rounded-3xl p-6 md:p-10">
             
             <!-- Step 1: Services -->
             <div id="step1" class="step-content">
                 <h2 class="text-2xl md:text-3xl font-medium text-white mb-2 font-playfair">Select Your Treatments</h2>
-                <p class="text-gray-400 mb-6">Choose one or more treatments to combine</p>
+                <p class="text-gray-400 mb-8">Choose one or more treatments to combine</p>
 
-                <div id="selection-box" class="hidden bg-white/[0.02] border border-white/10 rounded-xl p-4 mb-6">
+                <div id="selection-box" class="hidden bg-white/[0.02] border border-gold/20 rounded-2xl p-5 mb-8">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-sm text-gray-400">Your selection:</span>
-                        <span class="text-gold font-semibold" id="selection-total">£0 total • 0 min</span>
+                        <span class="text-sm text-gray-400 font-medium">Your selection:</span>
+                        <span class="text-gold font-bold text-lg" id="selection-total">£0 total • 0 min</span>
                     </div>
                     <div id="selection-tags" class="flex flex-wrap gap-2"></div>
                 </div>
 
-                <div class="space-y-8">
+                <div class="space-y-10">
+                    <!-- IV Vitamin Drips -->
                     <div>
-                        <h3 class="text-lg font-medium text-white mb-4">IV Therapy</h3>
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="p-2 rounded-lg bg-gold/10 border border-gold/20">
+                                <i class="fas fa-flask text-gold"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-white font-playfair">IV Vitamin Drips</h3>
+                        </div>
                         <div class="space-y-3" id="iv-services"></div>
                     </div>
+
+                    <!-- Ozone IV Therapy -->
                     <div>
-                        <h3 class="text-lg font-medium text-white mb-4">Physiotherapy</h3>
-                        <div class="space-y-3" id="physio-services"></div>
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="p-2 rounded-lg bg-teal/20 border border-teal/30">
+                                <i class="fas fa-wind text-teal"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-white font-playfair">Ozone IV Therapy</h3>
+                        </div>
+                        <div class="space-y-3" id="ozone-services"></div>
                     </div>
+
+                    <!-- Rehabilitation -->
                     <div>
-                        <h3 class="text-lg font-medium text-white mb-4">Advanced Treatments & Blood Tests</h3>
-                        <div class="space-y-3" id="advanced-services"></div>
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="p-2 rounded-lg bg-forest/20 border border-forest/30">
+                                <i class="fas fa-hand-holding-medical text-green-500"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-white font-playfair">Rehabilitation</h3>
+                        </div>
+                        <div class="space-y-3" id="rehab-services"></div>
+                    </div>
+
+                    <!-- Injury Treatments -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="p-2 rounded-lg bg-burgundy/20 border border-burgundy/30">
+                                <i class="fas fa-user-injured text-burgundy"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-white font-playfair">Injury Treatments</h3>
+                        </div>
+                        <div class="space-y-3" id="injury-services"></div>
+                    </div>
+
+                    <!-- Compression Therapy -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="p-2 rounded-lg bg-gold/10 border border-gold/20">
+                                <i class="fas fa-compress-arrows-alt text-gold"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-white font-playfair">Compression Therapy</h3>
+                        </div>
+                        <div class="space-y-3" id="compression-services"></div>
+                    </div>
+
+                    <!-- Blood Tests & Consultation -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="p-2 rounded-lg bg-burgundy/20 border border-burgundy/30">
+                                <i class="fas fa-vial text-burgundy"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-white font-playfair">Blood Tests & Consultation</h3>
+                        </div>
+                        <div class="space-y-3" id="diagnostic-services"></div>
                     </div>
                 </div>
 
-                <div class="flex justify-end mt-8">
-                    <button onclick="goToStep(2)" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-8 py-3 font-medium flex items-center gap-2 disabled:opacity-50" id="continue-btn" disabled>
+                <div class="flex justify-end mt-10">
+                    <button onclick="goToStep(2)" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-10 py-4 font-bold flex items-center gap-3 disabled:opacity-50 gold-glow transition-all hover:gap-4" id="continue-btn" disabled data-testid="continue-btn">
                         Continue with <span id="continue-count">0</span> treatment(s)
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -201,80 +277,121 @@
             <!-- Step 2: Date & Time -->
             <div id="step2" class="step-content hidden">
                 <h2 class="text-2xl md:text-3xl font-medium text-white mb-2 font-playfair">Choose Date & Time</h2>
+                <p class="text-gray-400 mb-8">Select your preferred appointment slot</p>
                 <div class="grid md:grid-cols-2 gap-8 mt-6">
                     <div>
-                        <label class="text-white mb-4 block">Select Date</label>
-                        <div class="bg-white/[0.02] border border-white/10 rounded-xl p-4">
-                            <input type="date" id="booking-date" class="w-full bg-transparent text-white text-lg">
+                        <label class="text-white mb-4 block font-medium text-lg">Select Date</label>
+                        <div class="bg-white/[0.02] border border-white/10 rounded-2xl p-5 hover:border-gold/30 transition-colors">
+                            <input type="date" id="booking-date" data-testid="booking-date" class="w-full bg-transparent text-white text-lg cursor-pointer">
                         </div>
                     </div>
                     <div>
-                        <label class="text-white mb-4 block">Select Time</label>
-                        <div id="time-slots" class="grid grid-cols-3 gap-2 max-h-[300px] overflow-y-auto">
+                        <label class="text-white mb-4 block font-medium text-lg">Select Time</label>
+                        <div id="time-slots" class="grid grid-cols-3 gap-3 max-h-[300px] overflow-y-auto pr-2">
                             <p class="col-span-3 text-center text-gray-500 py-8 italic">Please select a date first</p>
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-between mt-8">
-                    <button onclick="goToStep(1)" class="text-gray-400 hover:text-white font-medium">Back</button>
-                    <button onclick="goToStep(3)" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-8 py-3 font-medium disabled:opacity-50" id="step2-continue" disabled>Continue</button>
+                <div class="flex justify-between mt-10">
+                    <button onclick="goToStep(1)" class="text-gray-400 hover:text-gold font-medium flex items-center gap-2 transition-colors">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button onclick="goToStep(3)" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-10 py-4 font-bold disabled:opacity-50 gold-glow" id="step2-continue" disabled data-testid="step2-continue">Continue</button>
                 </div>
             </div>
 
             <!-- Step 3: Details -->
             <div id="step3" class="step-content hidden">
                 <h2 class="text-2xl md:text-3xl font-medium text-white mb-2 font-playfair">Your Details</h2>
-                <div class="max-w-md space-y-4 mt-6">
-                    <input type="text" id="customer-name" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white" placeholder="Full Name">
-                    <input type="email" id="customer-email" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white" placeholder="Email Address">
-                    <input type="tel" id="customer-phone" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white" placeholder="Phone Number">
+                <p class="text-gray-400 mb-8">Please provide your contact information</p>
+                <div class="max-w-md space-y-5 mt-6">
+                    <div>
+                        <label class="text-sm text-gray-400 mb-2 block font-medium">Full Name</label>
+                        <input type="text" id="customer-name" data-testid="customer-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder:text-gray-600" placeholder="John Smith">
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-400 mb-2 block font-medium">Email Address</label>
+                        <input type="email" id="customer-email" data-testid="customer-email" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder:text-gray-600" placeholder="john@example.com">
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-400 mb-2 block font-medium">Phone Number</label>
+                        <input type="tel" id="customer-phone" data-testid="customer-phone" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white placeholder:text-gray-600" placeholder="07123 456789">
+                    </div>
                 </div>
-                <div class="flex justify-between mt-8">
-                    <button onclick="goToStep(2)" class="text-gray-400 hover:text-white font-medium">Back</button>
-                    <button onclick="goToStep(4)" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-8 py-3 font-medium">Continue</button>
+                <div class="flex justify-between mt-10">
+                    <button onclick="goToStep(2)" class="text-gray-400 hover:text-gold font-medium flex items-center gap-2 transition-colors">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button onclick="goToStep(4)" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-10 py-4 font-bold gold-glow" data-testid="step3-continue">Continue</button>
                 </div>
             </div>
 
             <!-- Step 4: Health Screening -->
             <div id="step4" class="step-content hidden">
                 <h2 class="text-2xl md:text-3xl font-medium text-white mb-2 font-playfair">Health Screening</h2>
-                <p class="text-gray-400 mb-6">Answer carefully. Some conditions may prevent us from providing treatment.</p>
+                <p class="text-gray-400 mb-8">Answer carefully. Some conditions may prevent us from providing treatment.</p>
                 <div id="health-questions" class="space-y-4 mb-6"></div>
                 
                 <!-- Blocking Alert -->
-                <div id="health-alert" class="hidden bg-red-900/30 border border-red-500 rounded-xl p-4 mb-6">
-                    <p class="text-red-400 text-sm font-medium">Based on your answers, we cannot proceed with the online booking. Please call the clinic at 01482 422122 for a medical consultation.</p>
+                <div id="health-alert" class="hidden bg-red-900/30 border border-red-500 rounded-2xl p-5 mb-6">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-exclamation-triangle text-red-400 text-xl mt-1"></i>
+                        <p class="text-red-400 font-medium">Based on your answers, we cannot proceed with the online booking. Please call the clinic at <a href="tel:01482422122" class="underline">01482 422122</a> for a medical consultation.</p>
+                    </div>
                 </div>
 
-                <div class="flex justify-between mt-8">
-                    <button onclick="goToStep(3)" class="text-gray-400 hover:text-white font-medium">Back</button>
-                    <button onclick="goToStep(5)" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-8 py-3 font-medium disabled:opacity-50" id="step4-continue" disabled>Continue to Payment</button>
+                <div class="flex justify-between mt-10">
+                    <button onclick="goToStep(3)" class="text-gray-400 hover:text-gold font-medium flex items-center gap-2 transition-colors">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button onclick="goToStep(5)" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-10 py-4 font-bold disabled:opacity-50 gold-glow" id="step4-continue" disabled data-testid="step4-continue">Continue to Payment</button>
                 </div>
             </div>
 
             <!-- Step 5: Summary & Payment -->
             <div id="step5" class="step-content hidden">
                 <h2 class="text-2xl md:text-3xl font-medium text-white mb-2 font-playfair">Review & Pay</h2>
-                <div id="booking-summary" class="bg-white/[0.02] border border-white/10 rounded-xl p-6 mt-6 mb-8 space-y-4"></div>
+                <p class="text-gray-400 mb-8">Please review your booking details</p>
+                <div id="booking-summary" class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 mt-6 mb-8 space-y-4"></div>
                 
+                <h3 class="text-lg font-medium text-white mb-4 font-playfair">Payment Option</h3>
                 <div class="space-y-4 mb-8">
-                    <div class="payment-option selected rounded-xl p-4 cursor-pointer" onclick="selectPayment('full')" id="payment-full">
+                    <div class="payment-option selected rounded-2xl p-5 cursor-pointer" onclick="selectPayment('full')" id="payment-full" data-testid="payment-full">
                         <div class="flex justify-between items-center">
-                            <div><div class="font-medium text-white">Pay in Full</div><div class="text-xs text-gray-500">Secure appointment immediately</div></div>
-                            <div class="text-gold font-bold" id="full-price">£0</div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-5 h-5 rounded-full border-2 border-gold flex items-center justify-center">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-gold"></div>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-white">Pay in Full</div>
+                                    <div class="text-xs text-gray-500">Secure appointment immediately</div>
+                                </div>
+                            </div>
+                            <div class="text-gold font-bold text-xl" id="full-price">£0</div>
                         </div>
                     </div>
-                    <div class="payment-option rounded-xl p-4 cursor-pointer" onclick="selectPayment('deposit')" id="payment-deposit">
+                    <div class="payment-option rounded-2xl p-5 cursor-pointer" onclick="selectPayment('deposit')" id="payment-deposit" data-testid="payment-deposit">
                         <div class="flex justify-between items-center">
-                            <div><div class="font-medium text-white">30% Deposit</div><div class="text-xs text-gray-500">Remaining at the clinic</div></div>
-                            <div class="text-gold font-bold" id="deposit-price">£0</div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center">
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-white">30% Deposit</div>
+                                    <div class="text-xs text-gray-500">Pay remainder at the clinic</div>
+                                </div>
+                            </div>
+                            <div class="text-gold font-bold text-xl" id="deposit-price">£0</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-between mt-8">
-                    <button onclick="goToStep(4)" class="text-gray-400 hover:text-white font-medium">Back</button>
-                    <button onclick="processPayment()" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-12 py-4 font-bold">Pay <span id="pay-amount">£0</span></button>
+                <div class="flex justify-between mt-10">
+                    <button onclick="goToStep(4)" class="text-gray-400 hover:text-gold font-medium flex items-center gap-2 transition-colors">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button onclick="processPayment()" class="bg-gold text-dark hover:bg-gold/90 rounded-full px-12 py-4 font-bold gold-glow transition-all hover:scale-105" data-testid="pay-btn">
+                        <i class="fas fa-lock mr-2"></i> Pay <span id="pay-amount">£0</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -283,21 +400,40 @@
     <script>
         const services = {
             iv: [
-                { id: 'mega-recovery', name: 'Mega Recovery', price: 150, duration: 60, category: 'IV Therapy' },
-                { id: 'immunity-shield', name: 'Immunity Shield', price: 135, duration: 45, category: 'IV Therapy' },
-                { id: 'sport-performance', name: 'Sport Performance', price: 150, duration: 60, category: 'IV Therapy' },
-                { id: 'energy-booster', name: 'Energy Booster', price: 125, duration: 40, category: 'IV Therapy' },
-                { id: 'glutathione-glow', name: 'Glutathione Glow', price: 145, duration: 45, category: 'IV Therapy' },
-                { id: 'b12-shot', name: 'B12 Vitamin Shot', price: 30, duration: 15, category: 'Vitamin Shots' }
+                { id: 'vitamin-c', name: 'Vitamin C', price: 50, duration: 30, category: 'IV Vitamin Drips', priceNote: 'from' },
+                { id: 'iv2go', name: 'IV2GO', price: 80, duration: 20, category: 'IV Vitamin Drips' },
+                { id: 'myers-cocktail', name: 'Myers Cocktail', price: 100, duration: 45, category: 'IV Vitamin Drips', popular: true },
+                { id: 'beauty', name: 'Beauty', price: 130, duration: 45, category: 'IV Vitamin Drips' },
+                { id: 'detox', name: 'Detox', price: 130, duration: 45, category: 'IV Vitamin Drips', priceNote: 'from' },
+                { id: 'sport', name: 'Sport', price: 150, duration: 60, category: 'IV Vitamin Drips' },
+                { id: 'cold-flu', name: 'Cold & Flu', price: 150, duration: 45, category: 'IV Vitamin Drips' },
+                { id: 'recovery-drip', name: 'Recovery Drip', price: 150, duration: 60, category: 'IV Vitamin Drips', priceNote: 'from' }
             ],
-            physio: [
-                { id: 'physio-consultation', name: 'Physio Consultation', price: 60, duration: 60, category: 'Physiotherapy' },
-                { id: 'sports-massage', name: 'Sports & Deep Tissue Massage', price: 55, duration: 45, category: 'Physiotherapy' },
-                { id: 'acupuncture', name: 'Medical Acupuncture', price: 50, duration: 30, category: 'Physiotherapy' }
+            ozone: [
+                { id: 'ozone-1', name: '1 Drip', price: 100, duration: 30, category: 'Ozone IV Therapy' },
+                { id: 'ozone-3', name: '3 Drips Package', price: 250, duration: 90, category: 'Ozone IV Therapy', badge: 'Save £50' },
+                { id: 'ozone-5', name: '5 Drips Package', price: 400, duration: 150, category: 'Ozone IV Therapy', badge: 'Save £100' }
             ],
-            advanced: [
-                { id: 'ozone-therapy', name: 'Ozone Therapy', price: 180, duration: 30, category: 'Advanced Treatments' },
-                { id: 'blood-profile', name: 'Advanced Health Profile', price: 60, duration: 15, category: 'Blood Tests' }
+            rehab: [
+                { id: 'sports-massage-60', name: 'Sports Massage 60min', price: 45, duration: 60, category: 'Rehabilitation' },
+                { id: 'sports-massage-30', name: 'Sports Massage 30min', price: 30, duration: 30, category: 'Rehabilitation' },
+                { id: 'cupping-addon', name: 'Add Cupping (with massage)', price: 5, duration: 10, category: 'Add-on', addon: true },
+                { id: 'acupuncture-addon', name: 'Add Acupuncture/Dry Needling', price: 15, duration: 15, category: 'Add-on', addon: true }
+            ],
+            injury: [
+                { id: 'lymphatic-60', name: 'Lymphatic Drainage 60min', price: 45, duration: 60, category: 'Injury Treatments' },
+                { id: 'lymphatic-30', name: 'Lymphatic Drainage 30min', price: 30, duration: 30, category: 'Injury Treatments' },
+                { id: 'cupping-therapy', name: 'Cupping Therapy', price: 20, duration: 20, category: 'Injury Treatments' },
+                { id: 'acupuncture', name: 'Acupuncture', price: 35, duration: 30, category: 'Injury Treatments' }
+            ],
+            compression: [
+                { id: 'compression-60', name: '60 Minutes', price: 55, duration: 60, category: 'Compression Therapy' },
+                { id: 'compression-30', name: '30 Minutes', price: 35, duration: 30, category: 'Compression Therapy' },
+                { id: 'compression-20', name: '20 Minutes', price: 15, duration: 20, category: 'Compression Therapy' }
+            ],
+            diagnostic: [
+                { id: 'consultation', name: 'Consultation', price: 15, duration: 30, category: 'Consultation' },
+                { id: 'blood-tests', name: 'Blood Tests', price: 60, duration: 15, category: 'Blood Tests', priceNote: 'from' }
             ]
         };
 
@@ -332,24 +468,48 @@
         });
 
         function renderServices() {
-            const containers = { iv: 'iv-services', physio: 'physio-services', advanced: 'advanced-services' };
+            const containers = { 
+                iv: 'iv-services', 
+                ozone: 'ozone-services',
+                rehab: 'rehab-services', 
+                injury: 'injury-services',
+                compression: 'compression-services',
+                diagnostic: 'diagnostic-services'
+            };
             Object.keys(containers).forEach(key => {
-                document.getElementById(containers[key]).innerHTML = services[key].map(s => `
-                    <div class="service-item rounded-xl border border-white/10 p-4 cursor-pointer transition-all" onclick="toggleService('${s.id}')" id="service-${s.id}">
-                        <div class="flex items-start gap-4">
-                            <div class="checkbox-custom" id="cb-${s.id}"><svg class="w-4 h-4 text-dark hidden" id="ck-${s.id}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
-                            <div class="flex-1 flex justify-between">
-                                <div><div class="font-medium text-white">${s.name}</div><div class="text-xs text-gray-500">${s.duration} min</div></div>
-                                <div class="text-gold font-bold">£${s.price}</div>
+                const container = document.getElementById(containers[key]);
+                if (container && services[key]) {
+                    container.innerHTML = services[key].map(s => `
+                        <div class="service-item rounded-xl border border-white/10 p-5 cursor-pointer transition-all hover:border-gold/30" onclick="toggleService('${s.id}')" id="service-${s.id}" data-testid="service-item-${s.id}">
+                            <div class="flex items-start gap-4">
+                                <div class="checkbox-custom mt-0.5" id="cb-${s.id}">
+                                    <i class="fas fa-check text-dark hidden" id="ck-${s.id}"></i>
+                                </div>
+                                <div class="flex-1 flex justify-between items-start gap-3">
+                                    <div>
+                                        <div class="font-semibold text-white flex items-center gap-2">
+                                            ${s.name}
+                                            ${s.popular ? '<span class="text-[10px] bg-gold/20 text-gold px-2 py-0.5 rounded-full uppercase">Popular</span>' : ''}
+                                            ${s.addon ? '<span class="text-[10px] bg-forest/20 text-green-400 px-2 py-0.5 rounded-full uppercase">Add-on</span>' : ''}
+                                            ${s.badge ? '<span class="text-[10px] bg-teal/20 text-teal px-2 py-0.5 rounded-full uppercase">' + s.badge + '</span>' : ''}
+                                        </div>
+                                        <div class="text-xs text-gray-500 mt-1"><i class="far fa-clock mr-1"></i>${s.duration} min</div>
+                                    </div>
+                                    <div class="text-gold font-bold text-lg">${s.priceNote ? s.priceNote + ' ' : ''}£${s.price}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `).join('');
+                    `).join('');
+                }
             });
         }
 
+        function getAllServices() {
+            return [...services.iv, ...services.ozone, ...services.rehab, ...services.injury, ...services.compression, ...services.diagnostic];
+        }
+
         function toggleService(id) {
-            const all = [...services.iv, ...services.physio, ...services.advanced];
+            const all = getAllServices();
             const s = all.find(item => item.id === id);
             if (!s) return;
             const idx = selectedServices.findIndex(item => item.id === id);
@@ -359,12 +519,17 @@
         }
 
         function updateUI() {
-            const all = [...services.iv, ...services.physio, ...services.advanced];
+            const all = getAllServices();
             all.forEach(s => {
-                const isSel = selectedServices.some(sel => sel.id === s.id);
-                document.getElementById(`service-${s.id}`).classList.toggle('selected', isSel);
-                document.getElementById(`cb-${s.id}`).classList.toggle('checked', isSel);
-                document.getElementById(`ck-${s.id}`).classList.toggle('hidden', !isSel);
+                const el = document.getElementById(`service-${s.id}`);
+                const cb = document.getElementById(`cb-${s.id}`);
+                const ck = document.getElementById(`ck-${s.id}`);
+                if (el && cb && ck) {
+                    const isSel = selectedServices.some(sel => sel.id === s.id);
+                    el.classList.toggle('selected', isSel);
+                    cb.classList.toggle('checked', isSel);
+                    ck.classList.toggle('hidden', !isSel);
+                }
             });
             const total = selectedServices.reduce((sum, s) => sum + s.price, 0);
             const duration = selectedServices.reduce((sum, s) => sum + s.duration, 0);
@@ -375,7 +540,7 @@
                 sBox.classList.remove('hidden');
                 document.getElementById('selection-total').textContent = `£${total} total • ${duration} min`;
                 document.getElementById('selection-tags').innerHTML = selectedServices.map(s => `
-                    <span class="bg-gold/20 text-gold text-xs px-2 py-1 rounded-full flex items-center gap-1">${s.name} <button onclick="event.stopPropagation(); toggleService('${s.id}')">×</button></span>
+                    <span class="bg-gold/20 text-gold text-xs px-3 py-1.5 rounded-full flex items-center gap-2 font-medium">${s.name} <button onclick="event.stopPropagation(); toggleService('${s.id}')" class="hover:text-white transition-colors"><i class="fas fa-times text-xs"></i></button></span>
                 `).join('');
             } else sBox.classList.add('hidden');
         }
@@ -388,9 +553,9 @@
         }
 
         function generateSlots() {
-            const slots = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
+            const slots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
             document.getElementById('time-slots').innerHTML = slots.map(t => `
-                <button class="time-slot p-2 rounded-lg text-xs font-medium" onclick="selectTime('${t}')" id="slot-${t.replace(':','')}">${t}</button>
+                <button class="time-slot p-3 rounded-xl text-sm font-medium" onclick="selectTime('${t}')" id="slot-${t.replace(':','')}" data-testid="slot-${t.replace(':','')}">${t}</button>
             `).join('');
         }
 
@@ -407,37 +572,38 @@
             // Sync indicators
             for (let i = 1; i <= 5; i++) {
                 const indicator = document.getElementById(`step${i}-indicator`);
-                const label = document.getElementById(`step${i}-label`);
-                const connector = document.getElementById(`connector${i-1}`);
                 if (i < s) {
-                    indicator.className = 'step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-forest text-white';
-                    indicator.innerHTML = '✓';
+                    indicator.className = 'step-number w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-forest text-white font-bold';
+                    indicator.innerHTML = '<i class="fas fa-check"></i>';
                 } else if (i === s) {
-                    indicator.className = 'step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-gold text-dark font-bold';
+                    indicator.className = 'step-number w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-gold text-dark font-bold';
                     indicator.textContent = i;
                 } else {
-                    indicator.className = 'step-number w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white/10 text-gray-500';
+                    indicator.className = 'step-number w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white/10 text-gray-500 font-medium';
                     indicator.textContent = i;
                 }
             }
 
             if (s === 4) renderHealth();
             if (s === 5) renderSummary();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderHealth() {
-            const hasIV = selectedServices.some(s => s.category === 'IV Therapy' || s.category === 'Vitamin Shots');
-            const hasPhysio = selectedServices.some(s => s.category === 'Physiotherapy');
+            const hasIV = selectedServices.some(s => s.category === 'IV Vitamin Drips' || s.category === 'Ozone IV Therapy');
+            const hasPhysio = selectedServices.some(s => ['Rehabilitation', 'Injury Treatments', 'Compression Therapy', 'Add-on'].includes(s.category));
             let q = []; 
             if (hasIV) q = [...q, ...healthQuestions.iv];
             if (hasPhysio) q = [...q, ...healthQuestions.physio];
             
             document.getElementById('health-questions').innerHTML = q.map(item => `
-                <div class="bg-white/[0.02] border border-white/10 rounded-xl p-4 flex justify-between items-center gap-4">
-                    <p class="text-sm text-white">${item.question}</p>
+                <div class="bg-white/[0.02] border border-white/10 rounded-xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <p class="text-sm text-white font-medium">${item.question}</p>
                     <div class="flex gap-2 flex-shrink-0">
-                        <button onclick="answerHealth('${item.id}', true)" class="px-3 py-1 rounded-lg text-xs border border-white/10" id="h-${item.id}-y">Yes</button>
-                        <button onclick="answerHealth('${item.id}', false)" class="px-3 py-1 rounded-lg text-xs border border-white/10" id="h-${item.id}-n">No</button>
+                        <button onclick="answerHealth('${item.id}', true)" class="px-5 py-2 rounded-lg text-sm border border-white/10 hover:border-gold/30 transition-colors font-medium" id="h-${item.id}-y" data-testid="health-${item.id}-yes">Yes</button>
+                        <button onclick="answerHealth('${item.id}', false)" class="px-5 py-2 rounded-lg text-sm border border-white/10 hover:border-gold/30 transition-colors font-medium" id="h-${item.id}-n" data-testid="health-${item.id}-no">No</button>
                     </div>
                 </div>
             `).join('');
@@ -448,11 +614,11 @@
             healthAnswers[id] = val;
             const yBtn = document.getElementById(`h-${id}-y`);
             const nBtn = document.getElementById(`h-${id}-n`);
-            yBtn.className = val ? 'px-3 py-1 rounded-lg text-xs bg-gold text-dark font-bold' : 'px-3 py-1 rounded-lg text-xs border border-white/10';
-            nBtn.className = !val ? 'px-3 py-1 rounded-lg text-xs bg-forest text-white font-bold' : 'px-3 py-1 rounded-lg text-xs border border-white/10';
+            yBtn.className = val ? 'px-5 py-2 rounded-lg text-sm bg-gold text-dark font-bold' : 'px-5 py-2 rounded-lg text-sm border border-white/10 font-medium';
+            nBtn.className = !val ? 'px-5 py-2 rounded-lg text-sm bg-forest text-white font-bold' : 'px-5 py-2 rounded-lg text-sm border border-white/10 font-medium';
             
-            const hasIV = selectedServices.some(s => s.category === 'IV Therapy' || s.category === 'Vitamin Shots');
-            const hasPhysio = selectedServices.some(s => s.category === 'Physiotherapy');
+            const hasIV = selectedServices.some(s => s.category === 'IV Vitamin Drips' || s.category === 'Ozone IV Therapy');
+            const hasPhysio = selectedServices.some(s => ['Rehabilitation', 'Injury Treatments', 'Compression Therapy', 'Add-on'].includes(s.category));
             let q = []; if (hasIV) q = [...q, ...healthQuestions.iv]; if (hasPhysio) q = [...q, ...healthQuestions.physio];
             checkHealthStatus(q);
         }
@@ -479,12 +645,27 @@
             const total = selectedServices.reduce((sum, s) => sum + s.price, 0);
             const duration = selectedServices.reduce((sum, s) => sum + s.duration, 0);
             document.getElementById('booking-summary').innerHTML = `
-                <div class="flex justify-between"><span>Treatments:</span><span class="text-white text-right">${selectedServices.map(s => s.name).join(', ')}</span></div>
-                <div class="flex justify-between"><span>Time:</span><span class="text-white">${selectedDate} @ ${selectedTime}</span></div>
-                <div class="flex justify-between"><span>Duration:</span><span class="text-white">${duration} min</span></div>
-                <div class="flex justify-between"><span>Customer:</span><span class="text-white">${document.getElementById('customer-name').value}</span></div>
-                <hr class="border-white/10">
-                <div class="flex justify-between font-bold text-lg"><span>Total:</span><span class="text-gold">£${total.toFixed(2)}</span></div>
+                <div class="flex justify-between items-start">
+                    <span class="text-gray-400">Treatments:</span>
+                    <span class="text-white text-right font-medium">${selectedServices.map(s => s.name).join(', ')}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Date & Time:</span>
+                    <span class="text-white font-medium">${selectedDate} @ ${selectedTime}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Duration:</span>
+                    <span class="text-white font-medium">${duration} min</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Customer:</span>
+                    <span class="text-white font-medium">${document.getElementById('customer-name').value || 'Not provided'}</span>
+                </div>
+                <hr class="border-white/10 my-2">
+                <div class="flex justify-between font-bold text-xl">
+                    <span class="text-white">Total:</span>
+                    <span class="gradient-text">£${total.toFixed(2)}</span>
+                </div>
             `;
             document.getElementById('full-price').textContent = `£${total.toFixed(2)}`;
             document.getElementById('deposit-price').textContent = `£${(total * 0.3).toFixed(2)}`;
@@ -493,8 +674,18 @@
 
         function selectPayment(t) {
             paymentType = t;
-            document.getElementById('payment-full').classList.toggle('selected', t === 'full');
-            document.getElementById('payment-deposit').classList.toggle('selected', t === 'deposit');
+            const fullOpt = document.getElementById('payment-full');
+            const depositOpt = document.getElementById('payment-deposit');
+            
+            fullOpt.classList.toggle('selected', t === 'full');
+            depositOpt.classList.toggle('selected', t === 'deposit');
+            
+            fullOpt.querySelector('.w-5').innerHTML = t === 'full' ? '<div class="w-2.5 h-2.5 rounded-full bg-gold"></div>' : '';
+            fullOpt.querySelector('.w-5').className = t === 'full' ? 'w-5 h-5 rounded-full border-2 border-gold flex items-center justify-center' : 'w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center';
+            
+            depositOpt.querySelector('.w-5').innerHTML = t === 'deposit' ? '<div class="w-2.5 h-2.5 rounded-full bg-gold"></div>' : '';
+            depositOpt.querySelector('.w-5').className = t === 'deposit' ? 'w-5 h-5 rounded-full border-2 border-gold flex items-center justify-center' : 'w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center';
+            
             updatePayBtn();
         }
 
@@ -505,7 +696,7 @@
         }
 
         function processPayment() {
-            alert('Redirecting to secure payment checkout...');
+            alert('Redirecting to secure payment checkout...\n\nThis is a demo. In production, this would integrate with a payment provider.');
         }
     </script>
 </body>
